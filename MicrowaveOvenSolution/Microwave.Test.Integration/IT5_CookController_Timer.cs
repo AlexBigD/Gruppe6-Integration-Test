@@ -33,13 +33,15 @@ namespace Microwave.Test.Integration
 
 
             _powerTube = Substitute.For<IPowerTube>();
-            _cookController = Substitute.For<ICookController>();
+            _cookController = new CookController(_uut, _display, _powerTube);
         }
 
         [Test]
-        public void TimerStart_Cookcontroller()
+        public void TimerOnTimerTick_CookController()
         {
             _uut.Start(5);
+
+            _uut.TimerTick += Raise.EventWith(this, EventArgs.Empty);
 
             _cookController.Received();
         }
