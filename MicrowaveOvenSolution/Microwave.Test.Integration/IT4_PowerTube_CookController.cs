@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -17,7 +18,7 @@ namespace Microwave.Test.Integration
         private IDisplay _display;
         private ITimer _timer;
         private IUserInterface _UI;
-        private IOutput _output;
+        //private IOutput _output;
 
         private ICookController _uut;
         private IPowerTube _powerTube;
@@ -26,10 +27,9 @@ namespace Microwave.Test.Integration
         [SetUp]
         public void SetUp()
         {
-            _output = new Output();
-            _timer = new Timer();
-            
-
+            _UI = Substitute.For<IUserInterface>();
+            _timer = Substitute.For<ITimer>();
+            _display = Substitute.For<IDisplay>();
             _powerTube = Substitute.For<IPowerTube>();
             _uut = new CookController(_timer, _display, _powerTube,_UI);
         }
@@ -48,6 +48,43 @@ namespace Microwave.Test.Integration
             _uut.Stop();
 
             _powerTube.Received().TurnOff();
+        }
+
+        [Test]
+        public void CookControllerOnTimerExpired_PowerTube()
+        {
+            ManualResetEvent pause = new ManualResetEvent(false);
+
+            _uut.StartCooking(50, 0);
+
+            _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
+
+            _powerTube.Received().TurnOff();
+        }
+
+        [Test]
+        public void CookControllerOnTimerExpired_UI()
+        {
+            ManualResetEvent pause = new ManualResetEvent(false);
+
+            _uut.StartCooking(50, 1000);
+
+            _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
+
+            _UI.Received().CookingIsDone();
+        }
+
+        [Test]
+        public void CookControllerOnTimerTick_Display()
+        {
+            ManualResetEvent pause = new ManualResetEvent(false);
+
+            _uut.StartCooking(50, 6000);
+
+            _timer.TimeRemaining.Returns(6000);
+            _timer.TimerTick += Raise.EventWith(this, EventArgs.Empty);
+
+            _display.Received().ShowTime(0, 6);
         }
     }
 }
