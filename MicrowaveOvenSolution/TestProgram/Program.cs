@@ -25,15 +25,15 @@ namespace Microwave.TestProgram
             var pTube = new PowerTube(output);
             var CController = new CookController(timer, display, pTube);
             var UI = new UserInterface(tButton, tButton, scButton, door, display, light, CController);
+            CController.UI = UI;
 
             // Simulate user activities
             door.Open();
             door.Close();
             pButton.Press();
             tButton.Press();
-            tButton.Press();
             scButton.Press();
-            door.Open();
+            //door.Open();
 
             
 
