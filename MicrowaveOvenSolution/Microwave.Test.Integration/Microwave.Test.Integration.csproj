@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IT2_Output_Light.cs" />
+    <Compile Include="IT7_IT8_UI_Door_Button.cs" />
     <Compile Include="IT6_CookControllerDisplayLight_UI.cs" />
     <Compile Include="IT5_CookController_Timer.cs" />
     <Compile Include="IT4_PowerTube_CookController.cs" />
