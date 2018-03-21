@@ -41,9 +41,9 @@ namespace Microwave.Test.Integration
         public void TimerOnTimerTick_CookControllerCallsShowTime()
         {
             ManualResetEvent pause = new ManualResetEvent(false);
-            _uut.Start(4000);
+            _uut.Start(4);
 
-            pause.WaitOne(1500);
+            pause.WaitOne(1000);
 
             _display.Received().ShowTime(0, 3);
         }
