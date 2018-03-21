@@ -18,7 +18,6 @@ namespace Microwave.Test.Integration
         private IDisplay _display;
         private ITimer _timer;
         private IUserInterface _UI;
-        //private IOutput _output;
 
         private ICookController _uut;
         private IPowerTube _powerTube;
@@ -77,7 +76,7 @@ namespace Microwave.Test.Integration
         [Test]
         public void CookControllerOnTimerTick_Display()
         {
-            ManualResetEvent pause = new ManualResetEvent(false);
+            //ManualResetEvent pause = new ManualResetEvent(false);
 
             _uut.StartCooking(50, 6000);
 

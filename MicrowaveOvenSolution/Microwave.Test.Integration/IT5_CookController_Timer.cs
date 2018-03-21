@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using MicrowaveOvenClasses;
-using MicrowaveOvenClasses.Boundary;
 using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
 using NSubstitute;
+using Timer = MicrowaveOvenClasses.Boundary.Timer;
 
 namespace Microwave.Test.Integration
 {
@@ -37,19 +38,24 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void TimerOnTimerTick_CookController()
+        public void TimerOnTimerTick_CookControllerCallsShowTime()
         {
-            _uut.Start(5);
+            ManualResetEvent pause = new ManualResetEvent(false);
+            _uut.Start(4000);
 
-            _uut.TimerTick += Raise.EventWith(this, EventArgs.Empty);
+            pause.WaitOne(1000);
 
-            _cookController.Received();
+            _display.Received().ShowTime(0, 3);
         }
 
         [Test]
-        public void CookControllerStopCooking_PowerTube()
+        public void TimerOnExpire_CookControllerCallsTurnOff()
         {
-            _uut.Stop();
+            ManualResetEvent pause = new ManualResetEvent(false);
+
+            _cookController.StartCooking(50, 1);
+
+            pause.WaitOne(1000);
 
             _powerTube.Received().TurnOff();
         }
