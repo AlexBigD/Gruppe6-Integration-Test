@@ -30,9 +30,10 @@ namespace Microwave.Test.Integration
             _timer = Substitute.For<ITimer>();
             _display = Substitute.For<IDisplay>();
             _powerTube = Substitute.For<IPowerTube>();
-            _uut = new CookController(_timer, _display, _powerTube,_UI);
+            _uut = new CookController(_timer, _display, _powerTube, _UI);
         }
 
+        //PowerTube
         [Test]
         public void CookControllerStartCooking_PowerTube()
         {
@@ -52,8 +53,6 @@ namespace Microwave.Test.Integration
         [Test]
         public void CookControllerOnTimerExpired_PowerTube()
         {
-            ManualResetEvent pause = new ManualResetEvent(false);
-
             _uut.StartCooking(50, 0);
 
             _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
@@ -61,11 +60,10 @@ namespace Microwave.Test.Integration
             _powerTube.Received().TurnOff();
         }
 
+        //UserInterface
         [Test]
         public void CookControllerOnTimerExpired_UI()
         {
-            ManualResetEvent pause = new ManualResetEvent(false);
-
             _uut.StartCooking(50, 1000);
 
             _timer.Expired += Raise.EventWith(this, EventArgs.Empty);
@@ -73,17 +71,34 @@ namespace Microwave.Test.Integration
             _UI.Received().CookingIsDone();
         }
 
+
+        //Display
         [Test]
         public void CookControllerOnTimerTick_Display()
         {
-            //ManualResetEvent pause = new ManualResetEvent(false);
-
             _uut.StartCooking(50, 6000);
 
             _timer.TimeRemaining.Returns(6000);
             _timer.TimerTick += Raise.EventWith(this, EventArgs.Empty);
 
             _display.Received().ShowTime(0, 6);
+        }
+
+        //Timer
+        [Test]
+        public void CookControllerStartCooking_Timer()
+        {
+            _uut.StartCooking(50, 30);
+
+            _timer.Received().Start(30);
+        }
+
+        [Test]
+        public void CookControllerStopCooking_Timer()
+        {
+            _uut.Stop();
+
+            _timer.Received().Stop();
         }
     }
 }

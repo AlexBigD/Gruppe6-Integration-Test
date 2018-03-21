@@ -15,7 +15,7 @@ namespace Microwave.Test.Integration
     [TestFixture]
     public class IT6_CookControllerDisplayLight_UI
     {
-        private UserInterface _uut;
+        private IUserInterface _uut;
         private ICookController _cookController;
         private IButton _pButton, _tButton, _scButton;
 
@@ -37,6 +37,7 @@ namespace Microwave.Test.Integration
             _uut = new UserInterface(_pButton, _tButton, _scButton, _door, _display, _light, _cookController);
         }
 
+        //CookController
         [Test]
         public void UIStartCancelButton_CookControllerStart()
         {
@@ -56,6 +57,7 @@ namespace Microwave.Test.Integration
             _cookController.Received().Stop();
         }
 
+        //Light
         [Test]
         public void UIDoorOpen_LightTurnOn()
         {
@@ -81,14 +83,17 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void UIStart_LightTurnOn()
+        public void UICookingIsDone_LightTurnOff()
         {
             _uut.OnPowerPressed(_pButton, EventArgs.Empty);
             _uut.OnTimePressed(_tButton, EventArgs.Empty);
             _uut.OnStartCancelPressed(_scButton, EventArgs.Empty);
-            _light.Received().TurnOn();
+            _uut.CookingIsDone();
+            _light.Received().TurnOff();
         }
 
+
+        //Display
         [Test]
         public void UIPowerPressed_DisplayShowPower()
         {
@@ -102,6 +107,16 @@ namespace Microwave.Test.Integration
             _uut.OnPowerPressed(_pButton, EventArgs.Empty);
             _uut.OnTimePressed(_tButton, EventArgs.Empty);
             _display.Received().ShowTime(1,0);
+        }
+
+        [Test]
+        public void UICookingIsDone_DisplayClear()
+        {
+            _uut.OnPowerPressed(_pButton, EventArgs.Empty);
+            _uut.OnTimePressed(_tButton, EventArgs.Empty);
+            _uut.OnStartCancelPressed(_scButton, EventArgs.Empty);
+            _uut.CookingIsDone();
+            _display.Received().Clear();
         }
     }
 }
