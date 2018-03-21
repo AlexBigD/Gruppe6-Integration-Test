@@ -13,7 +13,7 @@ using NSubstitute;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    public class IT4_PowerTube_CookController
+    public class IT4_PowerTubeUIDisplayTimer_CookController
     {
         private IDisplay _display;
         private ITimer _timer;
