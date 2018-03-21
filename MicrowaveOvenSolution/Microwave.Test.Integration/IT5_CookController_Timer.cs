@@ -43,7 +43,7 @@ namespace Microwave.Test.Integration
             ManualResetEvent pause = new ManualResetEvent(false);
             _uut.Start(4000);
 
-            pause.WaitOne(1000);
+            pause.WaitOne(1500);
 
             _display.Received().ShowTime(0, 3);
         }
@@ -55,7 +55,7 @@ namespace Microwave.Test.Integration
 
             _cookController.StartCooking(50, 1);
 
-            pause.WaitOne(1000);
+            pause.WaitOne(1500);
 
             _powerTube.Received().TurnOff();
         }
