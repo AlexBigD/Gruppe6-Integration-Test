@@ -24,7 +24,7 @@ namespace MicrowaveOvenClasses.Boundary
 
         public void Start(int time)
         {
-            TimeRemaining = time*1000;
+            TimeRemaining = time*1000; //To convert time from s to ms
             timer.Enabled = true;
         }
 
